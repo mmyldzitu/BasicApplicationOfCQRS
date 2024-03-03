@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CQRS.CQRSFile.Commands
 {
-    public class UpdateStudentCommand
+    public class UpdateStudentCommand:IRequest
     {
         public int Id { get; set; }
         public string Name { get; set; }

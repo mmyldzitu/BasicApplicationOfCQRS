@@ -1,13 +1,15 @@
 ﻿using CQRS.CQRSFile.Commands;
 using CQRS.Data;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CQRS.CQRSFile.Handlers
 {
-    public class RemoveStudentCommandHandler
+    public class RemoveStudentCommandHandler:IRequestHandler<RemoveStudentCommand>
     {
         private readonly StudentContext _studentContext;
 
@@ -16,11 +18,14 @@ namespace CQRS.CQRSFile.Handlers
             _studentContext = studentContext;
         }
 
-        public void Handle(RemoveStudentCommand command)
+        
+
+        public async Task<Unit> Handle(RemoveStudentCommand request, CancellationToken cancellationToken)
         {
-            var deletedEntity = _studentContext.Students.Find(command.Id);
+            var deletedEntity = await _studentContext.Students.FindAsync(request.Id);
             _studentContext.Remove(deletedEntity);
-            _studentContext.SaveChanges();
+            await _studentContext.SaveChangesAsync();
+            return Unit.Value;
         }
     }
 }

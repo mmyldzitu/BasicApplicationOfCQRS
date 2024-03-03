@@ -1,15 +1,17 @@
 ﻿using CQRS.CQRSFile.Queries;
 using CQRS.CQRSFile.Results;
 using CQRS.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CQRS.CQRSFile.Handlers
 {
-    public class GetStudentsQueryHandler
+    public class GetStudentsQueryHandler:IRequestHandler<GetStudentsQuery,IEnumerable<GetStudentsQueryResult>>
     {
         private readonly StudentContext _studentContext;
 
@@ -17,9 +19,11 @@ namespace CQRS.CQRSFile.Handlers
         {
             _studentContext = studentContext;
         }
-        public IEnumerable<GetStudentsQueryResult> Handle(GetStudentsQuery query)
+       
+
+        public async  Task<IEnumerable<GetStudentsQueryResult>> Handle(GetStudentsQuery request, CancellationToken cancellationToken)
         {
-           var students= _studentContext.Students.Select(x=> new GetStudentsQueryResult {Name=x.Name, Surname=x.Surname, Age=x.Age, Id=x.Id }).AsNoTracking().AsEnumerable();
+            var students = await  _studentContext.Students.Select(x => new GetStudentsQueryResult { Name = x.Name, Surname = x.Surname, Age = x.Age, Id = x.Id }).AsNoTracking().ToListAsync();
             return students;
         }
     }

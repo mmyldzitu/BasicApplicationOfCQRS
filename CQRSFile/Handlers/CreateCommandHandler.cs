@@ -1,13 +1,15 @@
 ﻿using CQRS.CQRSFile.Commands;
 using CQRS.Data;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CQRS.CQRSFile.Handlers
 {
-    public class CreateCommandHandler
+    public class CreateCommandHandler:IRequestHandler<CreateStudentCommand>
     {
         private readonly StudentContext _studentContext;
 
@@ -15,10 +17,13 @@ namespace CQRS.CQRSFile.Handlers
         {
             _studentContext = studentContext;
         }
-        public void Handle(CreateStudentCommand command)
+       
+
+        public async Task<Unit> Handle(CreateStudentCommand request, CancellationToken cancellationToken)
         {
-            _studentContext.Students.Add(new Student { Age = command.Age, Name = command.Name, Surname = command.Surname });
-            _studentContext.SaveChanges();
+            await _studentContext.Students.AddAsync(new Student { Age = request.Age, Name = request.Name, Surname = request.Surname });
+            await _studentContext.SaveChangesAsync();
+            return Unit.Value;
         }
     }
 }

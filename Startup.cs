@@ -1,6 +1,7 @@
 
 using CQRS.CQRSFile.Handlers;
 using CQRS.Data;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,11 +30,12 @@ namespace CQRS
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             
             });
-            services.AddScoped<GetStudentByIdQueryHandler>();
-            services.AddScoped<GetStudentsQueryHandler>();
-            services.AddScoped<CreateCommandHandler>();
-            services.AddScoped<RemoveStudentCommandHandler>();
-            services.AddScoped<UpdateStudentCommandHandler>();
+            services.AddMediatR(typeof(Startup));
+            //services.AddScoped<GetStudentByIdQueryHandler>();
+            //services.AddScoped<GetStudentsQueryHandler>();
+            //services.AddScoped<CreateCommandHandler>();
+            //services.AddScoped<RemoveStudentCommandHandler>();
+            //services.AddScoped<UpdateStudentCommandHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
